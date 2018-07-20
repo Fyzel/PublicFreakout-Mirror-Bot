@@ -2,7 +2,7 @@
 
 from configparser import ConfigParser
 from json import load, dump
-from os import getpid, listdir, remove, path, makedirs
+from os import getpid, listdir, remove, path, makedirs, rename
 from prawcore.exceptions import RequestException, ServerError
 from time import sleep, ctime, time
 from requests import get
@@ -122,9 +122,9 @@ def process(submission):
     # Twitter post
     if "twitter" in submission.url:
         print("TWEETER VIDEO")
-        response = yt.extract_info(submission.url, process=False)
         
         try:
+            response = yt.extract_info(submission.url, process=False)
             while response.get("url"):
                 response = yt.extract_info(response["url"], process=False)
         
@@ -312,31 +312,44 @@ def save(status, submission, mirror_url=None):
 
 def upload(file_name, submission_id):
     file_name = conv_to_mp4(file_name)
-    print("Uploading to DO...")
-    save_file_size(file_name)
-    print("Size:", str(os.path.getsize(file_name)/1024/1024) + "MB")
-    client = session.client('s3',
-        region_name='nyc3',
-        endpoint_url="https://pf-mirror-1.nyc3.digitaloceanspaces.com",
-        aws_access_key_id=do_access_id,
-        aws_secret_access_key=do_secret_key)
-    key = str(submission_id) + ".mp4"
+    output_file = "/var/www/html/media/" + str(submission_id) + ".mp4"
+    rename(file_name, output_file)
 
-    client.upload_file(file_name, 'videos', key)
-    
-    resource = boto3.resource('s3',
-        region_name='nyc3',
-        endpoint_url="https://pf-mirror-1.nyc3.digitaloceanspaces.com",
-        aws_access_key_id=do_access_id,
-        aws_secret_access_key=do_secret_key)
-
-    print(key)
-    client.put_object_acl(ACL='public-read', Bucket='videos', Key=key)
-    key = "videos/" + key
-    mirror_url = "https://pf-mirror-1.nyc3.digitaloceanspaces.com/" + key
+    mirror_url = "http://mirrorbot.ga/media/" + str(submission_id) + ".mp4"
     
     print("Upload complete!")
     return str(mirror_url)
+
+
+
+#old upload
+#def upload(file_name, submission_id):
+    #file_name = conv_to_mp4(file_name)
+    #print("Uploading to DO...")
+    #save_file_size(file_name)
+    #print("Size:", str(os.path.getsize(file_name)/1024/1024) + "MB")
+    #client = session.client('s3',
+        #region_name='nyc3',
+        #endpoint_url="https://pf-mirror-1.nyc3.digitaloceanspaces.com",
+        #aws_access_key_id=do_access_id,
+        #aws_secret_access_key=do_secret_key)
+    #key = str(submission_id) + ".mp4"
+
+    #client.upload_file(file_name, 'videos', key)
+    
+    #resource = boto3.resource('s3',
+        #region_name='nyc3',
+        #endpoint_url="https://pf-mirror-1.nyc3.digitaloceanspaces.com",
+        #aws_access_key_id=do_access_id,
+        #aws_secret_access_key=do_secret_key)
+
+    #print(key)
+    #client.put_object_acl(ACL='public-read', Bucket='videos', Key=key)
+    #key = "videos/" + key
+    #mirror_url = "https://pf-mirror-1.nyc3.digitaloceanspaces.com/" + key
+    
+    #print("Upload complete!")
+    #return str(mirror_url)
         
 #converts given file to mp4, and returns new filename
 def conv_to_mp4(file_name):

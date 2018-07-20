@@ -3,3 +3,4 @@ youtube_dl
 boto3==1.7.50
 requests==2.18.4
 python-magic
+simplejson
