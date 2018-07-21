@@ -317,7 +317,7 @@ def upload(file_name, submission_id):
     output_file = "/var/www/html/media/" + str(submission_id) + ".mp4"
     rename(file_name, output_file)
 
-    mirror_url = "http://mirrorbot.ga/media/" + str(submission_id) + ".mp4"
+    mirror_url = "https://mirrorbot.ga/media/" + str(submission_id) + ".mp4"
     
     print("Upload complete!")
     return str(mirror_url)
