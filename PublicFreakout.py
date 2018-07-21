@@ -312,6 +312,8 @@ def save(status, submission, mirror_url=None):
 
 def upload(file_name, submission_id):
     file_name = conv_to_mp4(file_name)
+    save_file_size(file_name)
+    print("Size:", str(os.path.getsize(file_name)/1024/1024) + "MB")
     output_file = "/var/www/html/media/" + str(submission_id) + ".mp4"
     rename(file_name, output_file)
 
