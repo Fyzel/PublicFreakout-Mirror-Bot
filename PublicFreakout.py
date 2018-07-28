@@ -190,6 +190,9 @@ def process(submission):
         print(str(e))
         return save(str(e), submission, "UnicodeDecodeError")    
 
+    if listdir("Media") == []:
+        return save("Download failed", submission, "Media folder empty")
+
     file = [i for i in listdir("Media")][0]
     file = "Media/" + str(file)
     mirror_url = upload(file, submission.id)
