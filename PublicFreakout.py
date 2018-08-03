@@ -43,7 +43,7 @@ do_access_id = config["DigitalOcean"]["access_id"]
 do_secret_key = config["DigitalOcean"]["secret_key"]
 
 ydl_opts = {
-    'format': 'best[ext=webm]/bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+    'format': 'best[ext=mp4]/bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
     'logger': MyLogger(),
     'outtmpl': "Media/%(id)s.mp4",
 }
