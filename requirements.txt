@@ -1,4 +1,4 @@
-praw==5.4.0
+praw
 youtube_dl
 boto3
 requests==2.18.4
