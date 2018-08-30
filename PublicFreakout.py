@@ -188,7 +188,9 @@ def process(submission):
         return save(str(e), submission, "Same file error")
     except (UnicodeDecodeError) as e:
         print(str(e))
-        return save(str(e), submission, "UnicodeDecodeError")    
+        return save(str(e), submission, "UnicodeDecodeError")  
+    except (TypeError) as e:
+        return save(str(e), submission, "TypeError")
 
     if listdir("Media") == []:
         return save("Download failed", submission, "Media folder empty")
